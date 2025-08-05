@@ -1,22 +1,28 @@
 import * as gc1 from "../support/globalcommand1.js";
-import { getRandomString } from './utils';  // adjust path if needed
+
 export class Loginpage {
   visitpage() {
     cy.visit('/');
   }
 
     EmailField(email) {
-    gc1.findByData("login-email").type(email);
+    gc1.findByData("login-email").clear().type(email);
   }
+
+  SignupEmail(email){
+   gc1.findByData('signup-email').clear().type(email)
+  }
+
 
   passwordField(password) {
-    gc1.findByData("login-password").type(password);
+    gc1.findByData("login-password").clear().type(password);
   }
 
-  NameField(username) {
+  nameField(username) {
     const randomName = username || `user_${getRandomString()}`;
-    cy.get('[data-qa="signup-name"]').type(randomName);
+    cy.get('[data-qa="signup-name"]').clear().type(randomName);
   }
+
   loginButton() {
     gc1.findByData("login-button").click();
   }
@@ -24,8 +30,6 @@ export class Loginpage {
   SignUpButton(){
   cy.get ('[data-qa="signup-button"]').click();
   }
-
-
 
 
   Logout() {
@@ -37,27 +41,29 @@ export class Loginpage {
   }
 
   Login(email, password) {
+    cy.SignupLoginButton().click();
     this.EmailField(email);
     this.passwordField(password);
     this.loginButton();
-
-
   }
 
-
-
   invalidLogin(email, password) {
+     cy.SignupLoginButton().click();
     this.EmailField(email);
     this.passwordField(password);
     this.loginButton();
 gc1.findByText('Your email or password is incorrect!').should('be.visible')
-
   }
 
  emptylogin() {
-   // this.usernamefield(username);
-   // this.passwordField(password);
     this.loginButton();
 cy.contains('Username is required').should('be.visible')
+ }
+
+ Signup(username,email){
+  cy.SignupLoginButton().click();
+  this.nameField(username)
+  this.SignupEmail(email)
+  this.SignUpButton();
  }
 }
