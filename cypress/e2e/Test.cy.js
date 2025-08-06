@@ -3,7 +3,8 @@ const loginPage = new Loginpage();
 import { getRandomString } from "../support/utils"; 
 import * as gc1 from "../support/globalcommand1.js";
 import { getRandomEmail, getRandomName } from '../support/globalcommand1';
-
+import { ProductPage } from "../support/products";
+const productPage = new ProductPage();
 const username = getRandomName();
 const email = getRandomEmail();
 
@@ -33,7 +34,7 @@ describe('Whole_Tests', () => {
     cy.wait('@loginRequest').its('response.statusCode').should('be.oneOf', [200, 302]);
   })
 
-  it('empty login',()=>{
+  it.only('empty login',()=>{
     cy.wait(1000)
     loginPage.Login("e{backspace}", "e{backspace}");
       cy.focused().should('have.attr', 'required');
@@ -45,6 +46,13 @@ it('Creation of user',()=>{
   cy.wait('@signup').its('response.statusCode').should('eq', 200); 
       cy.url().should('eq', `${Cypress.config().baseUrl}`);
 })
+
 })
 
 
+describe('Validate Random Product Card', () => {
+  it.only('Should validate image, view product link, and add to cart for a random product', () => {
+  cy.productsButton().click();
+    productPage.validateRandomProductCard();
+  });
+});

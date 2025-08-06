@@ -1,9 +1,7 @@
 import * as gc1 from "../support/globalcommand1.js";
 
 export class Loginpage {
-  visitpage() {
-    cy.visit('/');
-  }
+
 
     EmailField(email) {
     gc1.findByData("login-email").clear().type(email);

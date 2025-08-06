@@ -22,6 +22,7 @@ Cypress.Commands.add('Homebutton',()=>{
 });
 
 
+
 //Products button
 Cypress.Commands.add('productsButton',()=>{
   cy.get('.shop-menu > .nav > :nth-child(2) > a').should('be.visible').should('include.text','Products')
