@@ -2,11 +2,12 @@ pipeline {
     agent any
 
     tools {
-        nodejs "NodeJS"  // Make sure NodeJS is configured in Jenkins > Global Tools
+        nodejs "NodeJS"  // Ensure this matches the name in Jenkins > Global Tool Configuration
     }
 
     environment {
-        CYPRESS_CACHE_FOLDER = "${HOME}/.cache/Cypress"
+        // Cypress binary path override (change to local writable dir to avoid Jenkins system issues)
+        CYPRESS_CACHE_FOLDER = "C:\\Users\\vinit\\AppData\\Local\\Cypress\\Cache"
     }
 
     stages {
@@ -31,7 +32,7 @@ pipeline {
 
         stage('Archive Reports') {
             when {
-                expression { fileExists('cypress/reports') }
+                expression { fileExists('cypress/reports/index.html') }
             }
             steps {
                 publishHTML(target: [
