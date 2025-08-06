@@ -24,6 +24,12 @@ module.exports = defineConfig({
     baseUrl: 'https://www.automationexercise.com/', // or your actual URL
   },
   video: false,
+    reporter: "mochawesome",
+  reporterOptions: {
+    reportDir: "cypress/reports",
+    overwrite: false,
+    html: true,
+    json: false,
   screenshotOnRunFailure: false,
    watchForFileChanges:false,
   chromeWebSecurity: false,
