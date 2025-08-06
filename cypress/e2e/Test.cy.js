@@ -34,7 +34,7 @@ describe('Whole_Tests', () => {
     cy.wait('@loginRequest').its('response.statusCode').should('be.oneOf', [200, 302]);
   })
 
-  it.only('empty login',()=>{
+  it('empty login',()=>{
     cy.wait(1000)
     loginPage.Login("e{backspace}", "e{backspace}");
       cy.focused().should('have.attr', 'required');
@@ -47,12 +47,16 @@ it('Creation of user',()=>{
       cy.url().should('eq', `${Cypress.config().baseUrl}`);
 })
 
-})
-
-
 describe('Validate Random Product Card', () => {
-  it.only('Should validate image, view product link, and add to cart for a random product', () => {
-  cy.productsButton().click();
+  it.only('Select a Product for the Product page and move to cart', () => {
+    cy.productsButton().click();
     productPage.validateRandomProductCard();
+    cy.clickViewCart();
   });
 });
+
+it('compare the select add to cart product in the View cart page', () => {
+    cy.productsButton().click();
+    productPage.validateRandomProductCard();
+    cy.clickViewCart();
+})
