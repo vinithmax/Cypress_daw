@@ -48,15 +48,40 @@ it('Creation of user',()=>{
 })
 
 describe('Validate Random Product Card', () => {
-  it.only('Select a Product for the Product page and move to cart', () => {
+  it('Select a Product for the Product page and move to cart', () => {
     cy.productsButton().click();
     productPage.validateRandomProductCard();
     cy.clickViewCart();
   });
-});
+
 
 it('compare the select add to cart product in the View cart page', () => {
     cy.productsButton().click();
     productPage.validateRandomProductCard();
     cy.clickViewCart();
+});
+
+it.only('Product page keys', () => {
+  cy.productsButton();
+
+  // get random product from commands.js
+  cy.getRandomProduct().then((randomProduct) => {
+    cy.get('.features_items .product-image-wrapper').each(($el) => {
+      const productCategory = $el.find('.productinfo p').text().trim();
+
+      if (productCategory.includes(randomProduct)) {
+        cy.wrap($el)
+          .find('.btn.btn-default.add-to-cart')
+          .first() // ensures only one button is clicked
+          .click({ force: true });
+
+        // stop iterating once clicked
+        return false;
+      }
+    });
+  });
+})
+
+
+})
 })
