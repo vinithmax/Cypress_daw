@@ -4,7 +4,7 @@ export class ProductPage {
   getAllProductCards() {
     return cy.get('.product-image-wrapper');
   }
-d
+
   // 🔹 Validate a single product card by ID
   validateProductCard(productId) {
     cy.get(`[data-product-id="${productId}"]`)
@@ -28,17 +28,36 @@ d
   }
 
   // 🔹 Get all product IDs from Add to Cart buttons
-  getAllProductIds() {
-    return cy.get('a.add-to-cart').then(($btns) => {
-      return Cypress._.map($btns, btn => btn.getAttribute('data-product-id'));
+ // Extract product details from UI
+  getAllProducts() {
+    return cy.get('.product-image-wrapper').then(($cards) => {
+      return Cypress._.map($cards, (card) => {
+        const id = card.querySelector('a.add-to-cart')?.getAttribute('data-product-id');
+        const name = card.querySelector('.productinfo p')?.innerText.trim();
+        const priceText = card.querySelector('.productinfo h2')?.innerText.trim();
+        const price = parseFloat(priceText.replace(/[^0-9]/g, ''));
+
+        return { id, name, price };
+      });
     });
   }
 
-  // 🔹 Validate a randomly chosen product from the list
-  validateRandomProductCard() {
-    this.getAllProductIds().then((ids) => {
-      const randomId = Cypress._.sample(ids);
-      this.validateProductCard(randomId);
+  // Pick random N products
+  selectRandomProducts(count = 2) {
+    return this.getAllProducts().then((products) => {
+      return Cypress._.sampleSize(products, count);
     });
   }
+
+  // Add product to cart
+  addProductToCart(product) {
+    cy.get(`a[data-product-id="${product.id}"]`).click({ force: true });
+  }
+
+  // View product details (if needed)
+  viewProduct(product) {
+    cy.get(`a[href="/product_details/${product.id}"]`).click({ force: true });
+  }
 }
+
+
