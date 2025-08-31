@@ -1,6 +1,5 @@
 /// <reference types="Cypress"/>
 
-
 const fs = require("fs");
 // to validate the URL it contains the text
 export function checkUrl(text) {
@@ -27,21 +26,32 @@ export function findByData(id) {
   return cy.get(`[data-qa='${id}']`);
 }
 
-
-
+export function checkAlertMessage(text) {
+  findByText(text).should("be.visible");
+}
 Cypress.Commands.add('searchProduct', (productName) => {
   cy.get('input[placeholder="Search"]').type(productName);
   cy.get('button[type="submit"]').click();
 });
 
+export function getRandomEmail() {
+  return `${getRandomName(4)}.${getRandomString(4)}@test.com`;
+}
 
 
+export function getRandomString(length = 5) {
+  return Math.random().toString(36).substring(2, 2 + length);
+}
 
-// Arrays of predefined values
-const names = ['Alice', 'Bob', 'Charlie', 'David', 'Eve'];
-const emails = ['alice@example.com', 'bob@example.com', 'charlie@example.com', 'david@example.com', 'eve@example.com'];
-const passwords = ['Password123', 'Qwerty456', 'Letmein789', 'SecurePassword1', 'P@ssw0rd!'];
-const lstnamess = ['subbu','rambu','somu','kamu','damu','panni','anni'];
+//Random name function
+export function getRandomName(length = 6) {
+  const chars = 'abcdefghijklmnopqrstuvwxyz';
+  let name = '';
+  for (let i = 0; i < length; i++) {
+    name += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return name.charAt(0).toUpperCase() + name.slice(1) + '_' + getRandomString(3);
+}
 
 // Function to get a random item from an array
 function getRandomItem(array) {

@@ -22,6 +22,7 @@ Cypress.Commands.add('Homebutton',()=>{
 });
 
 
+
 //Products button
 Cypress.Commands.add('productsButton',()=>{
   cy.get('.shop-menu > .nav > :nth-child(2) > a').should('be.visible').should('include.text','Products')
@@ -55,3 +56,17 @@ function generateRandomString(length = 8) {
 function generateRandomEmail() {
   return `${generateRandomString(6)}@example.com`;
 }
+
+
+Cypress.Commands.add('getRandomProduct', () => {
+  const products = ['Men Tshirt', 'Blue Top', 'Stylish Dress','Winter Top','Summer White Top','Sleeveless Dress','Fancy Green Top','Frozen Tops For Kids',
+    'Full Sleeves Top Cherry - Pink'
+    ,'Sleeves Top and Short - Blue & Pink',
+    'Sleeveless Unicorn Print Fit & Flare Net Dress - Multi',
+    'Long Maxi Tulle Fancy Dress Up Outfits -Pink',
+    'Grunt Blue Slim Fit Jeans',
+    'Regular Fit Straight Jeans'
+    ,'Cotton Silk Hand Block Print Saree'];
+  const randomProduct = products[Math.floor(Math.random() * products.length)];
+  return randomProduct;
+});

@@ -1,34 +1,93 @@
-import { Loginpage } from "../support/login";
-const loginPage = new Loginpage();
+import { Loginpage } from "../support/login.js";
+import { ProductPage } from "../support/products.js";
+import { CartPage } from "../support/CartPage.js";   // ✅ new import
 import { getRandomString } from "../support/utils"; 
 import * as gc1 from "../support/globalcommand1.js";
+import { getRandomEmail, getRandomName } from '../support/globalcommand1';
+
+
+const loginPage = new Loginpage();
+const productPage = new ProductPage();
+const cartPage = new CartPage();
+
+const username = getRandomName();
+const email = getRandomEmail();
+
 
 beforeEach('run this shit',()=>{
    cy.visit('/');
  cy.verifySiteHeaderText();
 });
 
-
-
 describe('Whole_Tests', () => {
   it('Login Test', () => {
      cy.intercept('POST', '**/login').as('loginRequest');
-  cy.SignupLoginButton().click();
-  cy.wait(3000)
+  cy.wait(1000)
   loginPage.Login('vinithtorres@gmail.com','V@admin123');
-  cy.wait(3000)
+  cy.wait(1000)
       // Wait for API and assert response
     cy.wait('@loginRequest').its('response.statusCode').should('eq', 302); 
-      cy.url().should('eq', `${Cypress.config().baseUrl}/`);
+      cy.url().should('eq', `${Cypress.config().baseUrl}`);
 
   })
 
   it('Invalid login account',()=>{
  cy.intercept('POST', '**/login').as('loginRequest');
   cy.SignupLoginButton().click();
-  cy.wait(3000)
+  cy.wait(1000)
     loginPage.invalidLogin('asdemailad@gmail.com','asdasdsda')
     cy.wait('@loginRequest').its('response.statusCode').should('be.oneOf', [200, 302]);
   })
+
+  it('empty login',()=>{
+    cy.wait(1000)
+    loginPage.Login("e{backspace}", "e{backspace}");
+      cy.focused().should('have.attr', 'required');
+
+  })
+it('Creation of user',()=>{
+   cy.intercept('POST', '**/login').as('signup');
+  loginPage.Signup(username,email);
+  cy.wait('@signup').its('response.statusCode').should('eq', 200); 
+      cy.url().should('eq', `${Cypress.config().baseUrl}`);
+})
+<<<<<<< HEAD
+
+describe('Validate Random Product Card', () => {
+  it('Select a Product for the Product page and move to cart', () => {
+    cy.productsButton().click();
+    productPage.validateRandomProductCard();
+    cy.clickViewCart();
+  });
+
+
+it('compare the select add to cart product in the View cart page', () => {
+    cy.productsButton().click();
+    productPage.validateRandomProductCard();
+    cy.clickViewCart();
+});
+
+it.only('Product page keys', () => {
+  cy.productsButton();
+
+  // get random product from commands.js
+  cy.getRandomProduct().then((randomProduct) => {
+    cy.get('.features_items .product-image-wrapper').each(($el) => {
+      const productCategory = $el.find('.productinfo p').text().trim();
+
+      if (productCategory.includes(randomProduct)) {
+        cy.wrap($el)
+          .find('.btn.btn-default.add-to-cart')
+          .first() // ensures only one button is clicked
+          .click({ force: true });
+
+        // stop iterating once clicked
+        return false;
+      }
+    });
+  });
 })
 
+
+})
+})
